@@ -2,7 +2,11 @@
 const RATION_X=101,
     RATION_Y=83,
     // define margin for checkCollisions
-    MARGIN=17.5
+    MARGIN=17.5,
+    COLS=5,
+    ROWS=6,
+    // adjust value for picture's position
+    MODIFIER_POSITION=30;
 /**
  * get random number between min and max
  * @param {* minimu number} min 
@@ -36,7 +40,7 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers. 
     this.x+=dt*this.speed;
-    if (this.x>6) {
+    if (this.x>ROWS) {
         this.resetBase();
     }
 };
@@ -48,25 +52,29 @@ Enemy.prototype.resetBase=function(){
 }
 
 Enemy.prototype.checkCollisions=function(player){ 
+    // if the both are not in a row, then return
     if (this.y!==player.y) return;
 
+    // enemy's and player's coordinate range
     const [min_player,max_player]=[player.x*RATION_X+MARGIN,(player.x+1)*RATION_X-MARGIN]; 
     const [min_me,max_me]=[this.x*RATION_X,(this.x+1)*RATION_X]; 
     
+    // if they do not overlap, then return 
     if (min_me>max_player || max_me<min_player) return;
-    
+
+    // go home, bye bye
     player.goHome(); 
 }
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x*RATION_X, this.y*RATION_Y-30);
+    ctx.drawImage(Resources.get(this.sprite), this.x*RATION_X, this.y*RATION_Y-MODIFIER_POSITION);
 };
 
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-var Player=function(x,y,sprite){
+var Player=function(sprite,x,y){
     const orgX=x || 2;
     const orgY=y || 5;
     Enemy.call(this,orgX,orgY,sprite || 'images/char-boy.png'); 
@@ -101,11 +109,11 @@ Player.prototype.handleInput=function(direction){
             break; 
         case 'right':
             this.x++;
-            if (this.x>=4) this.x=4;
+            if (this.x>=COLS-1) this.x=COLS-1;
             break;
         case 'down':
             this.y++;
-            if (this.y>=5) this.y=5;
+            if (this.y>=ROWS-1) this.y=ROWS-1;
             break;
     }
 
@@ -118,7 +126,7 @@ for (let index = 0; index < 5; index++) {
     allEnemies.push(new Enemy()); 
 } 
 
-var player=new Player();
+var player=new Player('images/char-cat-girl.png');
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
