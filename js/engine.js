@@ -43,7 +43,7 @@ var Engine = (function(global) {
 
         /* Call our update/render functions, pass along the time delta to
          * our update function since it may be used for smooth animation.
-         */
+         */ 
         update(dt);
         render();
 
@@ -79,7 +79,7 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
     }
 
     /* This is called by the update function and loops through all of the
@@ -94,6 +94,15 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
+    }
+
+    /**
+     * collision detection
+     */
+    function checkCollisions(){
+        allEnemies.forEach(function(enemy) {
+            enemy.checkCollisions(player);
+        });
     }
 
     /* This function initially draws the "game level", it will then call

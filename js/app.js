@@ -1,9 +1,29 @@
+    // define const value for coordinates 
+const RATION_X=101,
+    RATION_Y=83,
+    // define margin for checkCollisions
+    MARGIN=17.5
+/**
+ * get random number between min and max
+ * @param {* minimu number} min 
+ * @param {* maximum number} max 
+ */
+const randomInt=function(min,max){
+    if (min>max){
+        let temp=min;
+        min=max;
+        max=temp;
+    } 
+    return Math.floor(Math.random()*(max-min+1))+min;
+}
+
 // Enemies our player must avoid
 var Enemy = function(x,y,sprite) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
-    this.x=x || 0;
-    this.y=y || 3;
+    this.x=x || -1;
+    this.y=y || randomInt(1,3);
+    this.speed=randomInt(1,3);
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite =sprite || 'images/enemy-bug.png';
@@ -14,23 +34,44 @@ var Enemy = function(x,y,sprite) {
 Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
-    // all computers.
-    setInterval(function(){
-        this.x++;
-        if (this.x>5) this.x=1;
-    },dt);
+    // all computers. 
+    this.x+=dt*this.speed;
+    if (this.x>6) {
+        this.resetBase();
+    }
 };
+
+Enemy.prototype.resetBase=function(){
+    this.x=-1;
+    this.y=randomInt(1,3);
+    this.speed=randomInt(1,3);
+}
+
+Enemy.prototype.checkCollisions=function(player){ 
+    if (this.y!==player.y) return;
+
+    const [min_player,max_player]=[player.x*RATION_X+MARGIN,(player.x+1)*RATION_X-MARGIN]; 
+    const [min_me,max_me]=[this.x*RATION_X,(this.x+1)*RATION_X]; 
+    
+    if (min_me>max_player || max_me<min_player) return;
+    
+    player.goHome(); 
+}
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x*101, this.y*74);
+    ctx.drawImage(Resources.get(this.sprite), this.x*RATION_X, this.y*RATION_Y-30);
 };
 
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player=function(x,y,sprite){
-    Enemy.call(this,x || 2,y || 5,sprite || 'images/char-boy.png'); 
+    const orgX=x || 2;
+    const orgY=y || 5;
+    Enemy.call(this,orgX,orgY,sprite || 'images/char-boy.png'); 
+    this.__orgX=orgX;
+    this.__orgY=orgY;
 }
 
 Player.prototype=Object.create(Enemy.prototype);
@@ -40,11 +81,13 @@ Player.prototype.update=function(){
 
 }
 
-Player.prototype.render=function(){ 
-    var ratioX=101;
-    var ratioY=this.y===5 ? 76:90;
-    ctx.drawImage(Resources.get(this.sprite), this.x*ratioX, this.y*ratioY);
+Player.prototype.goHome=function(){
+    this.y=this.__orgY;
+    this.x=this.__orgX;
 }
+// Player.prototype.render=function(){  
+//     ctx.drawImage(Resources.get(this.sprite), this.x*ratioX, this.y*ratioY-30);
+// }
 
 Player.prototype.handleInput=function(direction){
     switch(direction){
@@ -54,7 +97,7 @@ Player.prototype.handleInput=function(direction){
             break;
         case 'up':
             this.y--;
-            if (this.y<=0) this.y=0;
+            if (this.y<=0) {this.goHome();};
             break; 
         case 'right':
             this.x++;
@@ -71,9 +114,9 @@ Player.prototype.handleInput=function(direction){
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 var allEnemies=[];
-allEnemies.push(new Enemy(0,1));
-allEnemies.push(new Enemy(0,2));
-allEnemies.push(new Enemy(0,3));
+for (let index = 0; index < 5; index++) {
+    allEnemies.push(new Enemy()); 
+} 
 
 var player=new Player();
 
