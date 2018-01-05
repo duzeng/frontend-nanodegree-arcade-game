@@ -74,6 +74,13 @@ Enemy.prototype.render = function() {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
+
+/**
+ * class Player
+ * @param {*} sprite 
+ * @param {*} x 
+ * @param {*} y 
+ */
 var Player=function(sprite,x,y){
     const orgX=x || 2;
     const orgY=y || 5;
@@ -82,6 +89,7 @@ var Player=function(sprite,x,y){
     this.__orgY=orgY;
 }
 
+// inherited from Enemy
 Player.prototype=Object.create(Enemy.prototype);
 Player.prototype.constructor=Player;
 
@@ -92,10 +100,7 @@ Player.prototype.update=function(){
 Player.prototype.goHome=function(){
     this.y=this.__orgY;
     this.x=this.__orgX;
-}
-// Player.prototype.render=function(){  
-//     ctx.drawImage(Resources.get(this.sprite), this.x*ratioX, this.y*ratioY-30);
-// }
+} 
 
 Player.prototype.handleInput=function(direction){
     switch(direction){
@@ -121,11 +126,14 @@ Player.prototype.handleInput=function(direction){
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
+
+// enemies's array
 var allEnemies=[];
 for (let index = 0; index < 5; index++) {
     allEnemies.push(new Enemy()); 
 } 
 
+// the instance object of Player
 var player=new Player('images/char-cat-girl.png');
 
 // This listens for key presses and sends the keys to your
