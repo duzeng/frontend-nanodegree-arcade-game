@@ -165,18 +165,62 @@ var Engine = (function(global) {
         player.render();
     }
 
+    /**
+     * initial canvas for drawing all players
+     */
+    function initCanvasForAllPlayers(){
+        var canvasForAllPlayers = doc.createElement('canvas');
+        canvasForAllPlayers.id='all-players';
+        canvasForAllPlayers.width=505;
+        canvasForAllPlayers.height=171; 
+        canvasForAllPlayers.style.display='block';
+        canvasForAllPlayers.style.margin='0 auto';
+        doc.body.appendChild(canvasForAllPlayers);
+
+        return canvasForAllPlayers;
+    }
+    /**
+     * render all roles
+     */
+    function renderAllPlayers(){  
+        let canvasForAllPlayers=initCanvasForAllPlayers();
+        contextForAllPlayers = canvasForAllPlayers.getContext('2d');
+
+        let players=['images/char-boy.png',
+        'images/char-cat-girl.png',
+        'images/char-horn-girl.png',
+        'images/char-pink-girl.png',
+        'images/char-princess-girl.png'
+        ];
+
+        //draw all the image of players
+        for (let index = 0; index < players.length; index++) {
+            contextForAllPlayers.drawImage(Resources.get(players[index]), index * 101, 0); 
+        } 
+
+        //add click event handler for changing the palyer's role
+        canvasForAllPlayers.addEventListener('click',function(e){  
+            let index=Math.floor(e.offsetX/101);
+            player.changeRole(players[index]);
+        },false);
+
+    }
+
     /* This function does nothing but it could have been a good place to
      * handle game reset states - maybe a new game menu or a game over screen
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
         // noop
+        renderAllPlayers();
     }
 
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when
      * all of these images are properly loaded our game will start.
      */
+
+    
     Resources.load([
         'images/stone-block.png',
         'images/water-block.png',
@@ -194,5 +238,5 @@ var Engine = (function(global) {
      * object when run in a browser) so that developers can use it more easily
      * from within their app.js files.
      */
-    global.ctx = ctx;
+    global.ctx = ctx; 
 })(this);

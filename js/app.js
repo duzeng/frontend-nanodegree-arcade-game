@@ -51,6 +51,10 @@ Enemy.prototype.resetBase=function(){
     this.speed=randomInt(1,3);
 }
 
+/**
+ * check collisions
+ * @param {* the player} player 
+ */
 Enemy.prototype.checkCollisions=function(player){ 
     // if the both are not in a row, then return
     if (this.y!==player.y) return;
@@ -97,10 +101,17 @@ Player.prototype.update=function(){
 
 }
 
+/**
+ * go back to origin
+ */
 Player.prototype.goHome=function(){
     this.y=this.__orgY;
     this.x=this.__orgX;
 } 
+
+Player.prototype.changeRole=function(name){
+    this.sprite=name; 
+}
 
 Player.prototype.handleInput=function(direction){
     switch(direction){
@@ -134,7 +145,7 @@ for (let index = 0; index < 5; index++) {
 } 
 
 // the instance object of Player
-var player=new Player('images/char-cat-girl.png');
+var player=new Player();
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -147,4 +158,4 @@ document.addEventListener('keyup', function(e) {
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
-});
+}); 
