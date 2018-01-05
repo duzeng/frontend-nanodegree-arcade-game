@@ -178,7 +178,8 @@ var Engine = (function(global) {
         doc.body.appendChild(canvasForAllPlayers);
 
         return canvasForAllPlayers;
-    }
+    } 
+
     /**
      * render all roles
      */
@@ -193,8 +194,11 @@ var Engine = (function(global) {
         'images/char-princess-girl.png'
         ];
 
+        let background='images/Selector.png';
+
         //draw all the image of players
         for (let index = 0; index < players.length; index++) {
+            contextForAllPlayers.drawImage(Resources.get(background), index * 101, 0); 
             contextForAllPlayers.drawImage(Resources.get(players[index]), index * 101, 0); 
         } 
 
@@ -205,14 +209,14 @@ var Engine = (function(global) {
         },false);
 
     }
-
+ 
     /* This function does nothing but it could have been a good place to
      * handle game reset states - maybe a new game menu or a game over screen
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
         // noop
-        renderAllPlayers();
+        renderAllPlayers(); 
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -230,7 +234,14 @@ var Engine = (function(global) {
         'images/char-cat-girl.png',
         'images/char-horn-girl.png',
         'images/char-pink-girl.png',
-        'images/char-princess-girl.png'
+        'images/char-princess-girl.png',
+        'images/Selector.png',
+        'images/Gem Blue.png',
+        'images/Gem Green.png',
+        'images/Gem Orange.png',
+        'images/Heart.png',
+        'images/Key.png',
+        'images/Star.png'
     ]);
     Resources.onReady(init);
 

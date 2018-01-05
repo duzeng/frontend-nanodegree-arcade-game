@@ -45,6 +45,9 @@ Enemy.prototype.update = function(dt) {
     }
 };
 
+/**
+ * initial object's postion an speed
+ */
 Enemy.prototype.resetBase=function(){
     this.x=-1;
     this.y=randomInt(1,3);
@@ -109,10 +112,18 @@ Player.prototype.goHome=function(){
     this.x=this.__orgX;
 } 
 
-Player.prototype.changeRole=function(name){
-    this.sprite=name; 
+/**
+ * change the players role
+ * @param {*} src 
+ */
+Player.prototype.changeRole=function(src){
+    this.sprite=src; 
 }
 
+/**
+ * handler for inputting
+ * @param {*} direction 
+ */
 Player.prototype.handleInput=function(direction){
     switch(direction){
         case 'left':
